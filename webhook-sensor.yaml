@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  name: webhook-sensor
+  namespace: argo-events
+spec:
+  template:
+    serviceAccountName: argo-events-sa
+  dependencies:
+    - name: webhook-event
+      eventSourceName: webhook-eventsource
+      eventName: example
+  triggers:
+    - template:
+        name: webhook-trigger
+        k8s:
+          group: ""
+          version: "v1"
+          resource: "jobs"
+          operation: "create"
+          source:
+            resource:
+              apiVersion: batch/v1
+              kind: Job
+              metadata:
+                generateName: webhook-job-
+                namespace: argo-events
+              spec:
+                template:
+                  metadata:
+                    labels:
+                      app: webhook-job
+                  spec:
+                    containers:
+                      - name: print-message
+                        image: busybox
+                        command: ["sh", "-c", "echo 'Webhook triggered this Job!'"]
+                    restartPolicy: Never
