@@ -11,4 +11,5 @@ spec:
   webhook:
     example:
       endpoint: /webhook
+      port: "12000" # Specify the port explicitly
       method: POST
