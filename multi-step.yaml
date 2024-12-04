@@ -9,6 +9,10 @@ spec:
     steps:
     - - name: step1
         template: whalesay
+        arguments:
+          parameters:
+          - name: message
+            value: "Hello Argo"
       - name: step2
         template: whalesay
         arguments:
