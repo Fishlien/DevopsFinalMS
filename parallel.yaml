@@ -1,35 +1,30 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
-  generateName: parallel-example-
+  generateName: parallel-busybox-
 spec:
-  entrypoint: parallel
+  entrypoint: parallel-steps
   templates:
-  - name: parallel
-    steps:
-    - - name: step1
-        template: whalesay
-        arguments:
-          parameters:
+    - name: parallel-steps
+      steps:
+        - - name: step-1
+            template: busybox-task
+            arguments:
+              parameters:
+                - name: message
+                  value: "Hello from step 1"
+        - - name: step-2
+            template: busybox-task
+            arguments:
+              parameters:
+                - name: message
+                  value: "Hello from step 2"
+
+    - name: busybox-task
+      inputs:
+        parameters:
           - name: message
-            value: "Task 1"
-      - name: step2
-        template: whalesay
-        arguments:
-          parameters:
-          - name: message
-            value: "Task 2"
-      - name: step3
-        template: whalesay
-        arguments:
-          parameters:
-          - name: message
-            value: "Task 3"
-  - name: whalesay
-    inputs:
-      parameters:
-      - name: message
-    container:
-      image: docker/whalesay:latest
-      command: [cowsay]
-      args: ["{{inputs.parameters.message}}"]
+      container:
+        image: busybox
+        command: [ "sh", "-c" ]
+        args: [ "echo {{inputs.parameters.message}}" ]
