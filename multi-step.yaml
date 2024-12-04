@@ -8,22 +8,25 @@ spec:
   - name: main
     steps:
     - - name: step1
-        template: whalesay
+        template: print-message
         arguments:
           parameters:
           - name: message
-            value: "Hello Argo"
-      - name: step2
-        template: whalesay
-        arguments:
-          parameters:
-          - name: message
-            value: "This is step 2"
-  - name: whalesay
+            value: "Hello, Argo Workflows!"
+    - - name: step2
+        template: list-files
+
+  - name: print-message
     inputs:
       parameters:
       - name: message
     container:
-      image: docker/whalesay:latest
-      command: [cowsay]
-      args: ["{{inputs.parameters.message}}"]
+      image: busybox
+      command: [sh, -c]
+      args: ["echo {{inputs.parameters.message}}"]
+
+  - name: list-files
+    container:
+      image: busybox
+      command: [sh, -c]
+      args: ["ls /"]
