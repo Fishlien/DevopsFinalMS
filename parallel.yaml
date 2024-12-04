@@ -6,21 +6,21 @@ spec:
   entrypoint: parallel-steps
   templates:
     - name: parallel-steps
-      parallelism: 2  # Number of parallel tasks
-      steps:
-        - - name: step-1
+      dag:
+        tasks:
+          - name: step-1
             template: busybox-task
             arguments:
               parameters:
                 - name: message
                   value: "Hello from step 1"
-        - - name: step-2
+          - name: step-2
             template: busybox-task
             arguments:
               parameters:
                 - name: message
                   value: "Hello from step 2"
-
+  
     - name: busybox-task
       inputs:
         parameters:
