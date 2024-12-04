@@ -6,6 +6,7 @@ spec:
   entrypoint: parallel-steps
   templates:
     - name: parallel-steps
+      parallelism: 2  # Number of parallel tasks
       steps:
         - - name: step-1
             template: busybox-task
